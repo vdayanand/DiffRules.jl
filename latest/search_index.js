@@ -21,7 +21,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Documentation",
     "title": "DiffRules.diffrule",
     "category": "Function",
-    "text": "diffrule(M::Symbol, f::Symbol, args...)\n\nReturn the derivative expression for M.f at the given argument(s), with the argument(s) interpolated into the returned expression.\n\nIn the n-ary case, an n-tuple of expressions will be returned where the ith expression is the derivative of f w.r.t the ith argument.\n\nExamples:\n\njulia> DiffBase.diffrule(:Base, :sin, 1)\n:(cos(1))\n\njulia> DiffBase.diffrule(:Base, :sin, :x)\n:(cos(x))\n\njulia> DiffBase.diffrule(:Base, :sin, :(x * y^2))\n:(cos(x * y ^ 2))\n\njulia> DiffBase.diffrule(:Base, :^, :(x + 2), :c)\n(:(c * (x + 2) ^ (c - 1)), :((x + 2) ^ c * log(x + 2)))\n\n\n\n"
+    "text": "diffrule(M::Symbol, f::Symbol, args...)\n\nReturn the derivative expression for M.f at the given argument(s), with the argument(s) interpolated into the returned expression.\n\nIn the n-ary case, an n-tuple of expressions will be returned where the ith expression is the derivative of f w.r.t the ith argument.\n\nExamples:\n\njulia> DiffResults.diffrule(:Base, :sin, 1)\n:(cos(1))\n\njulia> DiffResults.diffrule(:Base, :sin, :x)\n:(cos(x))\n\njulia> DiffResults.diffrule(:Base, :sin, :(x * y^2))\n:(cos(x * y ^ 2))\n\njulia> DiffResults.diffrule(:Base, :^, :(x + 2), :c)\n(:(c * (x + 2) ^ (c - 1)), :((x + 2) ^ c * log(x + 2)))\n\n\n\n"
 },
 
 {
@@ -29,7 +29,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Documentation",
     "title": "DiffRules.hasdiffrule",
     "category": "Function",
-    "text": "hasdiffrule(M::Symbol, f::Symbol, arity::Int)\n\nReturn true if a differentiation rule is defined for M.f and arity, or return false otherwise.\n\nHere, arity refers to the number of arguments accepted by f.\n\nExamples:\n\njulia> DiffBase.hasdiffrule(:Base, :sin, 1)\ntrue\n\njulia> DiffBase.hasdiffrule(:Base, :sin, 2)\nfalse\n\njulia> DiffBase.hasdiffrule(:Base, :-, 1)\ntrue\n\njulia> DiffBase.hasdiffrule(:Base, :-, 2)\ntrue\n\njulia> DiffBase.hasdiffrule(:Base, :-, 3)\nfalse\n\n\n\n"
+    "text": "hasdiffrule(M::Symbol, f::Symbol, arity::Int)\n\nReturn true if a differentiation rule is defined for M.f and arity, or return false otherwise.\n\nHere, arity refers to the number of arguments accepted by f.\n\nExamples:\n\njulia> DiffResults.hasdiffrule(:Base, :sin, 1)\ntrue\n\njulia> DiffResults.hasdiffrule(:Base, :sin, 2)\nfalse\n\njulia> DiffResults.hasdiffrule(:Base, :-, 1)\ntrue\n\njulia> DiffResults.hasdiffrule(:Base, :-, 2)\ntrue\n\njulia> DiffResults.hasdiffrule(:Base, :-, 3)\nfalse\n\n\n\n"
 },
 
 {
