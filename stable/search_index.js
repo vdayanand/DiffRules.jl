@@ -13,7 +13,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Documentation",
     "title": "DiffRules.@define_diffrule",
     "category": "Macro",
-    "text": "@define_diffrule M.f(x) = :(df_dx($x))\n@define_diffrule M.f(x, y) = :(df_dx($x, $y)), :(df_dy($x, $y))\n⋮\n\nDefine a new differentiation rule for the function M.f and the given arguments, which should be treated as bindings to Julia expressions.\n\nThe RHS should be a function call with a non-splatted argument list, and the LHS should be the derivative expression, or in the n-ary case, an n-tuple of expressions where the ith expression is the derivative of f w.r.t the ith argument. Arguments should be interpolated wherever they are used on the RHS.\n\nNote that differentiation rules are purely symbolic, so no type annotations should be used.\n\nExamples:\n\n@define_diffrule Base.cos(x)          = :(-sin($x))\n@define_diffrule Base.:/(x, y)        = :(inv($y)), :(-$x / ($y^2))\n@define_diffrule Base.polygamma(m, x) = :NaN,       :(polygamma($m + 1, $x))\n\n\n\n"
+    "text": "@define_diffrule M.f(x) = :(df_dx($x))\n@define_diffrule M.f(x, y) = :(df_dx($x, $y)), :(df_dy($x, $y))\n⋮\n\nDefine a new differentiation rule for the function M.f and the given arguments, which should be treated as bindings to Julia expressions. Return the defined rule's key.\n\nThe LHS should be a function call with a non-splatted argument list, and the RHS should be the derivative expression, or in the n-ary case, an n-tuple of expressions where the ith expression is the derivative of f w.r.t the ith argument. Arguments should be interpolated wherever they are used on the RHS.\n\nNote that differentiation rules are purely symbolic, so no type annotations should be used.\n\nExamples:\n\n@define_diffrule Base.cos(x)          = :(-sin($x))\n@define_diffrule Base.:/(x, y)        = :(inv($y)), :(-$x / ($y^2))\n@define_diffrule Base.polygamma(m, x) = :NaN,       :(polygamma($m + 1, $x))\n\n\n\n"
 },
 
 {
@@ -21,7 +21,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Documentation",
     "title": "DiffRules.diffrule",
     "category": "Function",
-    "text": "diffrule(M::Symbol, f::Symbol, args...)\n\nReturn the derivative expression for M.f at the given argument(s), with the argument(s) interpolated into the returned expression.\n\nIn the n-ary case, an n-tuple of expressions will be returned where the ith expression is the derivative of f w.r.t the ith argument.\n\nExamples:\n\njulia> DiffResults.diffrule(:Base, :sin, 1)\n:(cos(1))\n\njulia> DiffResults.diffrule(:Base, :sin, :x)\n:(cos(x))\n\njulia> DiffResults.diffrule(:Base, :sin, :(x * y^2))\n:(cos(x * y ^ 2))\n\njulia> DiffResults.diffrule(:Base, :^, :(x + 2), :c)\n(:(c * (x + 2) ^ (c - 1)), :((x + 2) ^ c * log(x + 2)))\n\n\n\n"
+    "text": "diffrule(M::Union{Expr,Symbol}, f::Symbol, args...)\n\nReturn the derivative expression for M.f at the given argument(s), with the argument(s) interpolated into the returned expression.\n\nIn the n-ary case, an n-tuple of expressions will be returned where the ith expression is the derivative of f w.r.t the ith argument.\n\nExamples:\n\njulia> DiffResults.diffrule(:Base, :sin, 1)\n:(cos(1))\n\njulia> DiffResults.diffrule(:Base, :sin, :x)\n:(cos(x))\n\njulia> DiffResults.diffrule(:Base, :sin, :(x * y^2))\n:(cos(x * y ^ 2))\n\njulia> DiffResults.diffrule(:Base, :^, :(x + 2), :c)\n(:(c * (x + 2) ^ (c - 1)), :((x + 2) ^ c * log(x + 2)))\n\n\n\n"
 },
 
 {
@@ -29,7 +29,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Documentation",
     "title": "DiffRules.hasdiffrule",
     "category": "Function",
-    "text": "hasdiffrule(M::Symbol, f::Symbol, arity::Int)\n\nReturn true if a differentiation rule is defined for M.f and arity, or return false otherwise.\n\nHere, arity refers to the number of arguments accepted by f.\n\nExamples:\n\njulia> DiffResults.hasdiffrule(:Base, :sin, 1)\ntrue\n\njulia> DiffResults.hasdiffrule(:Base, :sin, 2)\nfalse\n\njulia> DiffResults.hasdiffrule(:Base, :-, 1)\ntrue\n\njulia> DiffResults.hasdiffrule(:Base, :-, 2)\ntrue\n\njulia> DiffResults.hasdiffrule(:Base, :-, 3)\nfalse\n\n\n\n"
+    "text": "hasdiffrule(M::Union{Expr,Symbol}, f::Symbol, arity::Int)\n\nReturn true if a differentiation rule is defined for M.f and arity, or return false otherwise.\n\nHere, arity refers to the number of arguments accepted by f.\n\nExamples:\n\njulia> DiffResults.hasdiffrule(:Base, :sin, 1)\ntrue\n\njulia> DiffResults.hasdiffrule(:Base, :sin, 2)\nfalse\n\njulia> DiffResults.hasdiffrule(:Base, :-, 1)\ntrue\n\njulia> DiffResults.hasdiffrule(:Base, :-, 2)\ntrue\n\njulia> DiffResults.hasdiffrule(:Base, :-, 3)\nfalse\n\n\n\n"
 },
 
 {
@@ -37,7 +37,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Documentation",
     "title": "DiffRules.diffrules",
     "category": "Function",
-    "text": "diffrules()\n\nReturn a list of keys that can be used to access all defined differentiation rules.\n\nEach key is of the form (M::Symbol, f::Symbol, arity::Int).\n\nHere, arity refers to the number of arguments accepted by f.\n\nExamples:\n\njulia> first(diffrules())\ntrue\n\n\n\n"
+    "text": "diffrules()\n\nReturn a list of keys that can be used to access all defined differentiation rules.\n\nEach key is of the form (M::Symbol, f::Symbol, arity::Int).\n\nHere, arity refers to the number of arguments accepted by f.\n\nExamples:\n\njulia> first(DiffRules.diffrules())\n(:Base, :asind, 1)\n\n\n\n"
 },
 
 {
